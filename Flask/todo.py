@@ -49,5 +49,16 @@ def delete_todo(id):
     db.session.commit()
     return redirect(url_for('show_todos'))
 
+# Route to nuke the list from orbit:
+@app.route('/delete_all', methods=['POST'])
+def delete_all():
+    try:
+        num_rows_deleted = db.session.query(Todo).delete()
+        db.session.commit()
+        return redirect(url_for('show_todos'))
+    except:
+        db.session.rollback()
+        return "There was an issue deleting all items"
+
 if __name__ == '__main__':
     app.run(debug=True)
